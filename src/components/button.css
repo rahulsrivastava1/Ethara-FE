@@ -1,0 +1,25 @@
+.spinner {
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.btnContent {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+button.isLoading {
+  pointer-events: none;
+}
+
+.iconBtn.isLoading {
+  color: var(--text);
+}

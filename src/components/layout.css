@@ -1,0 +1,116 @@
+.app {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 0 20px;
+  height: 52px;
+  background: var(--topbar-bg);
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.brand {
+  font-family: var(--heading);
+  font-weight: 700;
+  font-size: 17px;
+  color: #fff;
+  letter-spacing: -0.2px;
+  white-space: nowrap;
+}
+
+.topbarUser {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.85);
+  white-space: nowrap;
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.sidebar {
+  width: 200px;
+  flex-shrink: 0;
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--border);
+  padding: 12px 0;
+}
+
+.sidebarNav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 10px;
+}
+
+.sidebarNav a {
+  text-decoration: none;
+  color: var(--text-h);
+  font-size: 14px;
+  padding: 9px 12px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+
+.sidebarNav a:hover {
+  background: var(--sidebar-active);
+}
+
+.sidebarNav a[aria-current='page'] {
+  background: var(--sidebar-active);
+  font-weight: 600;
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+  padding: 20px 24px;
+  box-sizing: border-box;
+  background: var(--page-bg);
+}
+
+@media (max-width: 720px) {
+  .topbar {
+    gap: 12px;
+    padding: 0 14px;
+  }
+
+  .body {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    padding: 8px 10px;
+  }
+
+  .sidebarNav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 0;
+  }
+
+  .sidebarNav a {
+    font-size: 13px;
+    padding: 7px 10px;
+  }
+
+  .content {
+    padding: 14px;
+  }
+}
