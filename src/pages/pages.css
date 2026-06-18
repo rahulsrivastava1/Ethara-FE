@@ -3,6 +3,8 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .pageHeader h1 {
@@ -23,6 +25,12 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 14px;
+  min-width: 0;
+}
+
+.grid2 > .card,
+.grid2 > form.card {
+  min-width: 0;
 }
 
 .grid2Equal {
@@ -311,6 +319,7 @@
 }
 
 .card:has(.tableWrap) {
+  overflow: hidden;
   padding-bottom: 16px;
 }
 
@@ -690,6 +699,56 @@ button:disabled {
 .table.tableProducts th:nth-child(5),
 .table.tableProducts td:nth-child(5) {
   width: 14%;
+}
+
+.table.tableProducts td:nth-child(1) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 720px) {
+  .tableWrap {
+    margin-left: -14px;
+    margin-right: -14px;
+    max-width: calc(100% + 28px);
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .table th,
+  .table td {
+    padding: 8px 10px;
+  }
+
+  .table.tableProducts th:nth-child(2),
+  .table.tableProducts td:nth-child(2) {
+    display: none;
+  }
+
+  .table.tableProducts th:nth-child(1),
+  .table.tableProducts td:nth-child(1) {
+    width: 36%;
+  }
+
+  .table.tableProducts th:nth-child(3),
+  .table.tableProducts td:nth-child(3) {
+    width: 16%;
+  }
+
+  .table.tableProducts th:nth-child(4),
+  .table.tableProducts td:nth-child(4) {
+    width: 22%;
+  }
+
+  .table.tableProducts th:nth-child(5),
+  .table.tableProducts td:nth-child(5) {
+    width: 26%;
+  }
+
+  .table.tableProducts .iconBtn {
+    width: 28px;
+    height: 28px;
+  }
 }
 
 .table tbody tr:last-child td {
