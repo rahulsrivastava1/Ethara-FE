@@ -135,13 +135,19 @@
 
 .dashboardSectionHeader {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
   margin-bottom: 14px;
 }
 
-.dashboardSectionHeader h2 {
+.dashboardSectionTitle {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.dashboardSectionTitle p {
   margin: 0;
 }
 
@@ -310,6 +316,17 @@
 
 .card:has(.tableWrap) h2 {
   margin-bottom: 12px;
+}
+
+.card .dashboardSectionTitle h2,
+.card:has(.tableWrap) .dashboardSectionTitle h2 {
+  margin: 0;
+  line-height: 1.25;
+}
+
+.card .dashboardSectionTitle p {
+  margin: 0;
+  line-height: 1.35;
 }
 
 .label {

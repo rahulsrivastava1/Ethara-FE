@@ -1,82 +1,82 @@
-import { useEffect, useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { AlertTriangle, Package, ShoppingCart, Users } from 'lucide-react'
-import ErrorAlert from '../components/ErrorAlert'
-import { api } from '../api'
-import './pages.css'
+import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
+import { AlertTriangle, Package, ShoppingCart, Users } from "lucide-react";
+import ErrorAlert from "../components/ErrorAlert";
+import { api } from "../api";
+import "./pages.css";
 
 function productId(p) {
-  return p.id ?? p._id ?? p.sku_code ?? p.product_name
+  return p.id ?? p._id ?? p.sku_code ?? p.product_name;
 }
 
 function stockLevel(qty) {
-  const n = Number(qty)
-  if (Number.isNaN(n)) return 'stockUnknown'
-  if (n <= 1) return 'stockCritical'
-  if (n <= 5) return 'stockLow'
-  return 'stockOk'
+  const n = Number(qty);
+  if (Number.isNaN(n)) return "stockUnknown";
+  if (n <= 1) return "stockCritical";
+  if (n <= 5) return "stockLow";
+  return "stockOk";
 }
 
 export default function Dashboard() {
-  const [data, setData] = useState(null)
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(true)
+  const [data, setData] = useState(null);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    let cancelled = false
-    setLoading(true)
-    setError('')
+    let cancelled = false;
+    setLoading(true);
+    setError("");
 
     api
       .dashboard()
       .then((d) => {
-        if (!cancelled) setData(d)
+        if (!cancelled) setData(d);
       })
       .catch((e) => {
-        if (!cancelled) setError(e.message || 'Failed to load dashboard')
+        if (!cancelled) setError(e.message || "Failed to load dashboard");
       })
       .finally(() => {
-        if (!cancelled) setLoading(false)
-      })
+        if (!cancelled) setLoading(false);
+      });
 
     return () => {
-      cancelled = true
-    }
-  }, [])
+      cancelled = true;
+    };
+  }, []);
 
   const stats = useMemo(() => {
-    if (!data) return null
-    const lowStock = data.low_stock_products ?? data.lowStockProducts ?? data.lowStock ?? []
+    if (!data) return null;
+    const lowStock = data.low_stock_products ?? data.lowStockProducts ?? data.lowStock ?? [];
     return {
       totalProducts: data.total_products ?? data.totalProducts ?? data.products ?? 0,
       totalCustomers: data.total_customers ?? data.totalCustomers ?? data.customers ?? 0,
       totalOrders: data.total_orders ?? data.totalOrders ?? data.orders ?? 0,
       lowStock: Array.isArray(lowStock) ? lowStock : [],
-    }
-  }, [data])
+    };
+  }, [data]);
 
   const statCards = stats
     ? [
         {
-          label: 'Total products',
+          label: "Total products",
           value: stats.totalProducts,
           icon: Package,
-          to: '/products',
+          to: "/products",
         },
         {
-          label: 'Total customers',
+          label: "Total customers",
           value: stats.totalCustomers,
           icon: Users,
-          to: '/customers',
+          to: "/customers",
         },
         {
-          label: 'Total orders',
+          label: "Total orders",
           value: stats.totalOrders,
           icon: ShoppingCart,
-          to: '/orders',
+          to: "/orders",
         },
       ]
-    : []
+    : [];
 
   return (
     <section className="page">
@@ -111,10 +111,11 @@ export default function Dashboard() {
 
           <div className="card">
             <div className="dashboardSectionHeader">
-              <h2>Low stock products</h2>
-              {stats.lowStock.length ? (
-                <span className="dashboardBadge">{stats.lowStock.length} items</span>
-              ) : null}
+              <div className="dashboardSectionTitle">
+                <h2>Low stock products</h2>
+                <p className="text-xs text-muted">Considered any stock quantity below 10 units as low stock.</p>
+              </div>
+              {stats.lowStock.length ? <span className="dashboardBadge">{stats.lowStock.length} items</span> : null}
             </div>
 
             {stats.lowStock.length ? (
@@ -130,17 +131,17 @@ export default function Dashboard() {
                   </thead>
                   <tbody>
                     {stats.lowStock.map((p) => {
-                      const qty = p.available_qty ?? p.stock ?? p.quantity
+                      const qty = p.available_qty ?? p.stock ?? p.quantity;
                       return (
                         <tr key={productId(p)}>
-                          <td>{p.product_name ?? p.name ?? '—'}</td>
-                          <td className="colSku">{p.sku_code ?? p.sku ?? '—'}</td>
+                          <td>{p.product_name ?? p.name ?? "—"}</td>
+                          <td className="colSku">{p.sku_code ?? p.sku ?? "—"}</td>
                           <td className="colNum">
-                            <span className={`stockBadge ${stockLevel(qty)}`}>{qty ?? '—'}</span>
+                            <span className={`stockBadge ${stockLevel(qty)}`}>{qty ?? "—"}</span>
                           </td>
-                          <td className="colNum">{p.price ?? '—'}</td>
+                          <td className="colNum">{p.price ?? "—"}</td>
                         </tr>
-                      )
+                      );
                     })}
                   </tbody>
                 </table>
@@ -155,5 +156,5 @@ export default function Dashboard() {
         </>
       ) : null}
     </section>
-  )
+  );
 }
