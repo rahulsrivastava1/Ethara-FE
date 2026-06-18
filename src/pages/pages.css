@@ -643,6 +643,13 @@ button:disabled {
   text-align: right;
 }
 
+.table.tableOrders td:nth-child(1),
+.table.tableOrders td.colCustomer {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .table.tableOrderItems {
   table-layout: fixed;
 }
@@ -746,6 +753,10 @@ button:disabled {
     -webkit-overflow-scrolling: touch;
   }
 
+  .tableWrapScroll {
+    overflow-x: hidden;
+  }
+
   .table th,
   .table td {
     padding: 8px 10px;
@@ -799,6 +810,46 @@ button:disabled {
   .table.tableCustomers th:nth-child(4),
   .table.tableCustomers td:nth-child(4) {
     width: 24%;
+  }
+
+  .table.tableOrders th.colCustomer,
+  .table.tableOrders td.colCustomer {
+    display: none;
+  }
+
+  .table.tableOrders th,
+  .table.tableOrders td {
+    width: auto;
+  }
+
+  .table.tableOrders th:nth-child(1),
+  .table.tableOrders td:nth-child(1) {
+    width: 34%;
+  }
+
+  .table.tableOrders th.colNum:nth-child(3),
+  .table.tableOrders td.colNum:nth-child(3) {
+    width: 14%;
+  }
+
+  .table.tableOrders th.colNum:nth-child(4),
+  .table.tableOrders td.colNum:nth-child(4) {
+    width: 24%;
+  }
+
+  .table.tableOrders th.colActions,
+  .table.tableOrders td.colActions {
+    width: 28%;
+  }
+
+  .table.tableOrders .iconBtn {
+    width: 28px;
+    height: 28px;
+  }
+
+  .table.tableOrders th {
+    font-size: 10px;
+    letter-spacing: 0.2px;
   }
 }
 

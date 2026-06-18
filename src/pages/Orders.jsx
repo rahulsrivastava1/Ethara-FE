@@ -296,9 +296,9 @@ export default function Orders() {
                 <thead>
                   <tr>
                     <th>Order ID</th>
-                    <th>Customer</th>
-                    <th className="colNum">Total qty</th>
-                    <th className="colNum">Total price</th>
+                    <th className="colCustomer">Customer</th>
+                    <th className="colNum">Qty</th>
+                    <th className="colNum">Price</th>
                     <th className="colActions">Actions</th>
                   </tr>
                 </thead>
@@ -309,7 +309,7 @@ export default function Orders() {
                     return (
                       <tr key={recordId}>
                         <td>{displayId}</td>
-                        <td>{orderCustomerName(o, customerNames)}</td>
+                        <td className="colCustomer">{orderCustomerName(o, customerNames)}</td>
                         <td className="colNum">{orderTotalQty(o)}</td>
                         <td className="colNum">{orderTotalPrice(o)}</td>
                         <td className="colActions">
