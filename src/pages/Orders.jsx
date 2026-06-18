@@ -51,12 +51,7 @@ function orderCustomerName(o, customerNames) {
   if (o.customer_name) return o.customer_name;
 
   const id = String(o.customer_id ?? o.customerId ?? o.customer?.id ?? "");
-  return (
-    o.customer?.full_name ??
-    o.customer?.name ??
-    customerNames.get(id) ??
-    (id || "—")
-  );
+  return o.customer?.full_name ?? o.customer?.name ?? customerNames.get(id) ?? (id || "—");
 }
 
 function orderTotalPrice(o) {
@@ -160,15 +155,11 @@ export default function Orders() {
   }
 
   function updateLineItem(index, key, value) {
-    setLineItems((items) =>
-      items.map((item, i) => (i === index ? { ...item, [key]: value } : item)),
-    );
+    setLineItems((items) => items.map((item, i) => (i === index ? { ...item, [key]: value } : item)));
     if (fieldErrors.items?.[index]?.[key]) {
       setFieldErrors((errs) => ({
         ...errs,
-        items: errs.items.map((item, i) =>
-          i === index ? { ...item, [key]: "" } : item,
-        ),
+        items: errs.items.map((item, i) => (i === index ? { ...item, [key]: "" } : item)),
       }));
     }
   }
@@ -223,10 +214,8 @@ export default function Orders() {
       title: "Delete order",
       message: (
         <>
-          Are you sure you want to delete order{" "}
-          <strong>{displayId}</strong> for{" "}
-          <strong>{orderCustomerName(o, customerNames)}</strong>? This action cannot
-          be undone.
+          Are you sure you want to delete order <strong>{displayId}</strong> for{" "}
+          <strong>{orderCustomerName(o, customerNames)}</strong>? This action cannot be undone.
         </>
       ),
       onConfirm: async () => {
@@ -285,13 +274,6 @@ export default function Orders() {
               You can add up to {MAX_PRODUCT_LINES} products per order.
             </p>
 
-            <div className="orderLineHeader orderLineRow">
-              <span className="orderLineColLabel">Product</span>
-              <span className="orderLineColLabel">
-                Qty <span className="requiredMark">*</span>
-              </span>
-            </div>
-
             <div className="orderLines">
               {lineItems.map((line, index) => (
                 <div key={`line-${formKey}-${index}`} className="orderLineItem">
@@ -305,16 +287,10 @@ export default function Orders() {
                           disabled={optionsLoading || saving}
                         >
                           <SelectTrigger
-                            className={cn(
-                              fieldErrors.items?.[index]?.productId && "border-destructive",
-                            )}
+                            className={cn(fieldErrors.items?.[index]?.productId && "border-destructive")}
                             aria-label={`Product ${index + 1}`}
                           >
-                            <SelectValue
-                              placeholder={
-                                optionsLoading ? "Loading products…" : "Select product"
-                              }
-                            />
+                            <SelectValue placeholder={optionsLoading ? "Loading products…" : "Select product"} />
                           </SelectTrigger>
                           <SelectContent>
                             {products.map((p) => (
@@ -355,21 +331,16 @@ export default function Orders() {
               ))}
             </div>
 
-          {lineItems.length < MAX_PRODUCT_LINES ? (
-            <div className="orderAddLine">
-              <Button
-                type="button"
-                className="secondary"
-                disabled={optionsLoading || saving}
-                onClick={addLineItem}
-              >
-                <Plus size={16} />
-                Add another product
-              </Button>
-            </div>
-          ) : (
-            <p className="orderProductsMax text-xs text-muted">Maximum {MAX_PRODUCT_LINES} products added.</p>
-          )}
+            {lineItems.length < MAX_PRODUCT_LINES ? (
+              <div className="orderAddLine">
+                <Button type="button" className="secondary" disabled={optionsLoading || saving} onClick={addLineItem}>
+                  <Plus size={16} />
+                  Add another product
+                </Button>
+              </div>
+            ) : (
+              <p className="orderProductsMax text-xs text-muted">Maximum {MAX_PRODUCT_LINES} products added.</p>
+            )}
           </div>
 
           <ErrorAlert message={error} />
@@ -448,8 +419,7 @@ export default function Orders() {
         <div className="card">
           <div className="cardHeaderRow">
             <h2>
-              Order details — #{orderDisplayId(viewingOrder)} ·{" "}
-              {orderCustomerName(viewingOrder, customerNames)} (
+              Order details — #{orderDisplayId(viewingOrder)} · {orderCustomerName(viewingOrder, customerNames)} (
               {orderTotalPrice(viewingOrder)})
             </h2>
             <IconButton
