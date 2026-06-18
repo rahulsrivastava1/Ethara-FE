@@ -460,6 +460,13 @@ textarea {
   padding: 8px 11px;
   font: inherit;
   font-size: 14px;
+  line-height: 1.5;
+}
+
+.field [data-slot='select-trigger'] {
+  min-height: calc(1.5em + 16px);
+  border-radius: 6px;
+  box-shadow: none;
 }
 
 input:focus,
