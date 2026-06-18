@@ -324,9 +324,71 @@
   line-height: 1.25;
 }
 
+.card .dashboardSectionTitle .dashboardSectionHeading {
+  margin: 0;
+  line-height: 1.25;
+}
+
 .card .dashboardSectionTitle p {
   margin: 0;
   line-height: 1.35;
+}
+
+.dashboardSectionHeading {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.lowStockInfo {
+  display: none;
+  position: relative;
+  color: var(--text);
+  cursor: help;
+  line-height: 0;
+}
+
+.dashboardSectionDesc {
+  display: block;
+}
+
+.lowStockInfoTip {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: min(240px, 70vw);
+  padding: 8px 10px;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.35;
+  color: var(--text-h);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  box-shadow: var(--shadow);
+  z-index: 10;
+  white-space: normal;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+@media (max-width: 768px) {
+  .dashboardSectionDesc {
+    display: none;
+  }
+
+  .lowStockInfo {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .lowStockInfo:hover .lowStockInfoTip,
+  .lowStockInfo:focus-within .lowStockInfoTip {
+    display: block;
+  }
 }
 
 .label {

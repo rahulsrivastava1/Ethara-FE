@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { AlertTriangle, Package, ShoppingCart, Users } from "lucide-react";
+import { AlertTriangle, Info, Package, ShoppingCart, Users } from "lucide-react";
 import ErrorAlert from "../components/ErrorAlert";
 import { api } from "../api";
 import "./pages.css";
@@ -16,6 +16,8 @@ function stockLevel(qty) {
   if (n <= 5) return "stockLow";
   return "stockOk";
 }
+
+const LOW_STOCK_DESC = "Considered any stock quantity below 10 units as low stock.";
 
 export default function Dashboard() {
   const [data, setData] = useState(null);
@@ -112,8 +114,16 @@ export default function Dashboard() {
           <div className="card">
             <div className="dashboardSectionHeader">
               <div className="dashboardSectionTitle">
-                <h2>Low stock products</h2>
-                <p className="text-xs text-muted">Considered any stock quantity below 10 units as low stock.</p>
+                <h2 className="dashboardSectionHeading">
+                  Low stock products
+                  <span className="lowStockInfo" tabIndex={0} aria-label={LOW_STOCK_DESC}>
+                    <Info size={14} strokeWidth={2} aria-hidden="true" />
+                    <span className="lowStockInfoTip" role="tooltip">
+                      {LOW_STOCK_DESC}
+                    </span>
+                  </span>
+                </h2>
+                <p className="text-xs text-muted dashboardSectionDesc">{LOW_STOCK_DESC}</p>
               </div>
               {stats.lowStock.length ? <span className="dashboardBadge">{stats.lowStock.length} items</span> : null}
             </div>
