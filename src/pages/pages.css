@@ -431,9 +431,98 @@
   min-width: 0;
 }
 
+.orderLines {
+  display: grid;
+  gap: 12px;
+}
+
+.orderProductsSection {
+  margin-bottom: 12px;
+}
+
+.orderProductsSectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.orderProductsSectionLabel {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-h);
+}
+
+.orderProductsBadge {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-h);
+  background: #f4f5f7;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 2px 9px;
+  line-height: 1.45;
+  font-variant-numeric: tabular-nums;
+}
+
+.orderProductsNote {
+  margin: 0 0 10px;
+}
+
+.orderProductsMax {
+  margin: 0 0 12px;
+}
+
+.orderLineFields {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.orderLineHeader {
+  margin-bottom: 6px;
+}
+
+.orderLineColLabel {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-h);
+}
+
+.orderLineRow {
+  flex: 1;
+  margin-bottom: 0;
+  grid-template-columns: 1fr 96px;
+  align-items: start;
+}
+
+.orderLineRow .field {
+  margin-bottom: 0;
+}
+
+.orderLineRow [data-slot='select-trigger'],
+.orderLineRow input {
+  height: 38px;
+  min-height: 38px;
+}
+
+.orderLineRemove {
+  flex-shrink: 0;
+  margin-bottom: 16px;
+}
+
+.orderAddLine {
+  margin-top: 10px;
+}
+
 @media (max-width: 520px) {
   .fieldRow {
     grid-template-columns: 1fr;
+  }
+
+  .orderLineRow {
+    grid-template-columns: 1fr 88px;
   }
 }
 

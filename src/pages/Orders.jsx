@@ -26,12 +26,25 @@ function normalizeList(data) {
   return Array.isArray(data) ? data : data.items || [];
 }
 
-function validateOrderForm({ customerId, productId, quantity }) {
+const MAX_PRODUCT_LINES = 3;
+
+function emptyLineItem() {
+  return { productId: "", quantity: "1" };
+}
+
+function validateOrderForm(customerId, lineItems) {
   return {
     customerId: required(customerId),
-    productId: required(productId),
-    quantity: required(quantity),
+    items: lineItems.map((item) => ({
+      productId: required(item.productId),
+      quantity: required(item.quantity),
+    })),
   };
+}
+
+function hasOrderErrors(errors) {
+  if (errors.customerId) return true;
+  return (errors.items ?? []).some((itemErrors) => hasErrors(itemErrors));
 }
 
 function orderCustomerName(o, customerNames) {
@@ -95,9 +108,8 @@ export default function Orders() {
   const [viewingOrder, setViewingOrder] = useState(null);
 
   const [customerId, setCustomerId] = useState("");
-  const [productId, setProductId] = useState("");
-  const [quantity, setQuantity] = useState("1");
-  const [fieldErrors, setFieldErrors] = useState({});
+  const [lineItems, setLineItems] = useState([emptyLineItem()]);
+  const [fieldErrors, setFieldErrors] = useState({ items: [] });
   const [formKey, setFormKey] = useState(0);
   const confirm = useConfirm();
 
@@ -135,9 +147,8 @@ export default function Orders() {
 
   function resetForm() {
     setCustomerId("");
-    setProductId("");
-    setQuantity("1");
-    setFieldErrors({});
+    setLineItems([emptyLineItem()]);
+    setFieldErrors({ items: [] });
     setFormKey((k) => k + 1);
   }
 
@@ -148,32 +159,49 @@ export default function Orders() {
     }
   }
 
-  function updateProductId(value) {
-    setProductId(value);
-    if (fieldErrors.productId) {
-      setFieldErrors((errs) => ({ ...errs, productId: "" }));
+  function updateLineItem(index, key, value) {
+    setLineItems((items) =>
+      items.map((item, i) => (i === index ? { ...item, [key]: value } : item)),
+    );
+    if (fieldErrors.items?.[index]?.[key]) {
+      setFieldErrors((errs) => ({
+        ...errs,
+        items: errs.items.map((item, i) =>
+          i === index ? { ...item, [key]: "" } : item,
+        ),
+      }));
     }
   }
 
-  function updateQuantity(value) {
-    setQuantity(value);
-    if (fieldErrors.quantity) {
-      setFieldErrors((errs) => ({ ...errs, quantity: "" }));
-    }
+  function addLineItem() {
+    if (lineItems.length >= MAX_PRODUCT_LINES) return;
+    setLineItems((items) => [...items, emptyLineItem()]);
+  }
+
+  function removeLineItem(index) {
+    if (lineItems.length <= 1) return;
+    setLineItems((items) => items.filter((_, i) => i !== index));
+    setFieldErrors((errs) => ({
+      ...errs,
+      items: errs.items?.filter((_, i) => i !== index) ?? [],
+    }));
   }
 
   async function onSubmit(e) {
     e.preventDefault();
-    const errors = validateOrderForm({ customerId, productId, quantity });
+    const errors = validateOrderForm(customerId, lineItems);
     setFieldErrors(errors);
-    if (hasErrors(errors)) return;
+    if (hasOrderErrors(errors)) return;
 
     setSaving(true);
     setError("");
 
     const payload = {
       customer_id: Number(customerId),
-      items: [{ product_id: Number(productId), quantity: Number(quantity) }],
+      items: lineItems.map((item) => ({
+        product_id: Number(item.productId),
+        quantity: Number(item.quantity),
+      })),
     };
 
     try {
@@ -244,35 +272,105 @@ export default function Orders() {
             </Select>
           </FormField>
 
-          <FormField label="Product" required error={fieldErrors.productId}>
-            <Select
-              key={`product-${formKey}`}
-              value={productId || undefined}
-              onValueChange={updateProductId}
-              disabled={optionsLoading || saving}
-            >
-              <SelectTrigger className={cn(fieldErrors.productId && "border-destructive")}>
-                <SelectValue placeholder={optionsLoading ? "Loading products…" : "Select product"} />
-              </SelectTrigger>
-              <SelectContent>
-                {products.map((p) => (
-                  <SelectItem key={itemId(p)} value={itemId(p)}>
-                    {productLabel(p)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </FormField>
+          <div className="orderProductsSection">
+            <div className="orderProductsSectionHeader">
+              <span className="orderProductsSectionLabel">
+                Products <span className="requiredMark">*</span>
+              </span>
+              <span className="orderProductsBadge">
+                {lineItems.length}/{MAX_PRODUCT_LINES}
+              </span>
+            </div>
+            <p className="orderProductsNote text-xs text-muted">
+              You can add up to {MAX_PRODUCT_LINES} products per order.
+            </p>
 
-          <FormField label="Quantity" required error={fieldErrors.quantity}>
-            <input
-              value={quantity}
-              onChange={(e) => updateQuantity(e.target.value)}
-              inputMode="numeric"
-              placeholder="e.g. 2"
-              disabled={saving}
-            />
-          </FormField>
+            <div className="orderLineHeader orderLineRow">
+              <span className="orderLineColLabel">Product</span>
+              <span className="orderLineColLabel">
+                Qty <span className="requiredMark">*</span>
+              </span>
+            </div>
+
+            <div className="orderLines">
+              {lineItems.map((line, index) => (
+                <div key={`line-${formKey}-${index}`} className="orderLineItem">
+                  <div className="orderLineFields">
+                    <div className="fieldRow orderLineRow">
+                      <FormField error={fieldErrors.items?.[index]?.productId}>
+                        <Select
+                          key={`product-${formKey}-${index}`}
+                          value={line.productId || undefined}
+                          onValueChange={(value) => updateLineItem(index, "productId", value)}
+                          disabled={optionsLoading || saving}
+                        >
+                          <SelectTrigger
+                            className={cn(
+                              fieldErrors.items?.[index]?.productId && "border-destructive",
+                            )}
+                            aria-label={`Product ${index + 1}`}
+                          >
+                            <SelectValue
+                              placeholder={
+                                optionsLoading ? "Loading products…" : "Select product"
+                              }
+                            />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {products.map((p) => (
+                              <SelectItem key={itemId(p)} value={itemId(p)}>
+                                {productLabel(p)}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormField>
+
+                      <FormField error={fieldErrors.items?.[index]?.quantity}>
+                        <input
+                          value={line.quantity}
+                          onChange={(e) => updateLineItem(index, "quantity", e.target.value)}
+                          inputMode="numeric"
+                          placeholder="e.g. 2"
+                          disabled={saving}
+                          aria-label={`Quantity ${index + 1}`}
+                        />
+                      </FormField>
+                    </div>
+
+                    {lineItems.length > 1 ? (
+                      <IconButton
+                        className="iconBtn iconBtnDanger orderLineRemove"
+                        type="button"
+                        title="Remove product"
+                        aria-label={`Remove product ${index + 1}`}
+                        disabled={saving}
+                        onClick={() => removeLineItem(index)}
+                      >
+                        <Trash2 size={15} strokeWidth={2} />
+                      </IconButton>
+                    ) : null}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+          {lineItems.length < MAX_PRODUCT_LINES ? (
+            <div className="orderAddLine">
+              <Button
+                type="button"
+                className="secondary"
+                disabled={optionsLoading || saving}
+                onClick={addLineItem}
+              >
+                <Plus size={16} />
+                Add another product
+              </Button>
+            </div>
+          ) : (
+            <p className="orderProductsMax text-xs text-muted">Maximum {MAX_PRODUCT_LINES} products added.</p>
+          )}
+          </div>
 
           <ErrorAlert message={error} />
 
