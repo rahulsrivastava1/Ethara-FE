@@ -5,6 +5,7 @@ import ErrorAlert from "../components/ErrorAlert";
 import { FormField } from "../components/FormField";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useConfirm } from "../components/ConfirmProvider";
+import { useToast } from "../components/ToastProvider";
 import { api } from "../api";
 import { hasErrors, required } from "../utils/validate";
 import { cn } from "@/lib/utils";
@@ -107,6 +108,7 @@ export default function Orders() {
   const [fieldErrors, setFieldErrors] = useState({ items: [] });
   const [formKey, setFormKey] = useState(0);
   const confirm = useConfirm();
+  const toast = useToast();
 
   function loadOrders() {
     setLoading(true);
@@ -199,6 +201,7 @@ export default function Orders() {
       await api.createOrder(payload);
       resetForm();
       loadOrders();
+      toast.success("Order created successfully.");
     } catch (e2) {
       setError(e2.message || "Create order failed");
     } finally {

@@ -4,6 +4,7 @@ import { Button, IconButton } from '../components/Button'
 import ErrorAlert from '../components/ErrorAlert'
 import { FormField } from '../components/FormField'
 import { useConfirm } from '../components/ConfirmProvider'
+import { useToast } from '../components/ToastProvider'
 import { api } from '../api'
 import { hasErrors, phoneNumberDigits, required } from '../utils/validate'
 import './pages.css'
@@ -40,6 +41,7 @@ export default function Customers() {
   const [fieldErrors, setFieldErrors] = useState({})
   const [saving, setSaving] = useState(false)
   const confirm = useConfirm()
+  const toast = useToast()
 
   function load() {
     setLoading(true)
@@ -87,6 +89,7 @@ export default function Customers() {
       setForm(emptyForm)
       setFieldErrors({})
       load()
+      toast.success('Customer created successfully.')
     } catch (e2) {
       setError(e2.message || 'Save failed')
     } finally {

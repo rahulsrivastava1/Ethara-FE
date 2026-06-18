@@ -4,6 +4,7 @@ import { Button, IconButton } from '../components/Button'
 import ErrorAlert from '../components/ErrorAlert'
 import { FormField } from '../components/FormField'
 import { useConfirm } from '../components/ConfirmProvider'
+import { useToast } from '../components/ToastProvider'
 import { api } from '../api'
 import { hasErrors, required } from '../utils/validate'
 import './pages.css'
@@ -28,6 +29,7 @@ export default function Products() {
   const [editing, setEditing] = useState(null)
   const [saving, setSaving] = useState(false)
   const confirm = useConfirm()
+  const toast = useToast()
 
   function load() {
     setLoading(true)
@@ -99,6 +101,7 @@ export default function Products() {
       }
       reset()
       load()
+      toast.success(editing ? 'Product updated successfully.' : 'Product created successfully.')
     } catch (e2) {
       setError(e2.message || 'Save failed')
     } finally {
