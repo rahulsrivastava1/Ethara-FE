@@ -122,8 +122,8 @@ export default function Customers() {
         <p className="muted">Add customers and manage the list.</p>
       </header>
 
-      <div className="grid2">
-        <form className="card" onSubmit={onSubmit} noValidate>
+      <div className="grid2 grid2Equal">
+        <form className="card cardStretch" onSubmit={onSubmit} noValidate>
           <h2>Add customer</h2>
 
           <FormField label="Full name" required error={fieldErrors.full_name}>
@@ -167,7 +167,7 @@ export default function Customers() {
           </div>
         </form>
 
-        <div className="card">
+        <div className="card cardStretch cardListPanel">
           <h2>Customer list</h2>
 
           {loading ? <p className="muted">Loading…</p> : null}
@@ -176,8 +176,8 @@ export default function Customers() {
           ) : null}
 
           {!!items.length ? (
-            <div className="tableWrap">
-              <table className="table">
+            <div className="tableWrap tableWrapScroll">
+              <table className="table tableCustomers">
                 <thead>
                   <tr>
                     <th>Name</th>

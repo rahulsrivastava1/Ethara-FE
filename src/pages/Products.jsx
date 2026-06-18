@@ -134,8 +134,8 @@ export default function Products() {
         <p className="muted">Add, update, and delete products.</p>
       </header>
 
-      <div className="grid2">
-        <form className="card" onSubmit={onSubmit} noValidate>
+      <div className="grid2 grid2Equal">
+        <form className="card cardStretch" onSubmit={onSubmit} noValidate>
           <h2>{editing ? 'Update product' : 'Add product'}</h2>
 
           <FormField label="Product name" required error={fieldErrors.product_name}>
@@ -202,7 +202,7 @@ export default function Products() {
           </div>
         </form>
 
-        <div className="card">
+        <div className="card cardStretch cardListPanel">
           <h2>Product list</h2>
 
           {loading ? <p className="muted">Loading…</p> : null}
@@ -211,7 +211,7 @@ export default function Products() {
           ) : null}
 
           {!!items.length ? (
-            <div className="tableWrap">
+            <div className="tableWrap tableWrapScroll">
               <table className="table tableProducts">
                 <thead>
                   <tr>

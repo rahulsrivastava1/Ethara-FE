@@ -284,7 +284,7 @@ export default function Orders() {
           </div>
         </form>
 
-        <div className="card cardStretch cardOrdersList">
+        <div className="card cardStretch cardListPanel">
           <h2>Orders</h2>
 
           {loading ? <p className="muted">Loading…</p> : null}
